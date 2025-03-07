@@ -31,7 +31,7 @@ class BasicTest extends TestLevels {
 
     @EnabledIf("easyEnabled")
     @ParameterizedTest
-    @ValueSource(ints = {2, 3, 4, 5})
+    @ValueSource(ints = { 2, 3, 4, 5 })
     @Timeout(2)
     void testProgress(int N) {
         final BasicTable table = dine(new BasicTable(N), 1);
@@ -40,7 +40,7 @@ class BasicTest extends TestLevels {
 
     @EnabledIf("mediumEnabled")
     @ParameterizedTest
-    @ValueSource(ints = {2, 3, 4, 5})
+    @ValueSource(ints = { 2, 3, 4, 5 })
     @Timeout(8)
     void testScalability(int N) {
         final BasicTable table1 = dine(new BasicTable(N), 1);
@@ -50,7 +50,7 @@ class BasicTest extends TestLevels {
 
     @EnabledIf("mediumEnabled")
     @ParameterizedTest
-    @ValueSource(ints = {2, 3, 4, 5})
+    @ValueSource(ints = { 2, 3, 4, 5 })
     @Timeout(2)
     void testWeakFairness(int N) {
         final BasicTable table = dine(new BasicTable(N), 1);
@@ -59,7 +59,7 @@ class BasicTest extends TestLevels {
 
     @EnabledIf("hardEnabled")
     @ParameterizedTest
-    @ValueSource(ints = {2, 3, 4, 5})
+    @ValueSource(ints = { 2, 3, 4, 5 })
     @Timeout(2)
     void testStrongFairness(int N) {
         final BasicTable table = dine(new BasicTable(N), 1);

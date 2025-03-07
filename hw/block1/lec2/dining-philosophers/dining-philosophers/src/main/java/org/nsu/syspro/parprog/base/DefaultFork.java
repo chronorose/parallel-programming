@@ -27,7 +27,8 @@ public class DefaultFork implements Fork {
         lock.lock();
         final Thread thread = Thread.currentThread();
         if (owner != null) {
-            throw new IllegalStateException(thread + " tries to acquire fork " + this + " which is already used by " + owner);
+            throw new IllegalStateException(
+                    thread + " tries to acquire fork " + this + " which is already used by " + owner);
         }
         owner = thread;
     }
@@ -37,7 +38,8 @@ public class DefaultFork implements Fork {
         final Thread thread = Thread.currentThread();
         final Thread currentOwner = owner;
         if (currentOwner != thread) {
-            throw new IllegalStateException(thread + " tries to release fork " + this + " which is already used by " + currentOwner);
+            throw new IllegalStateException(
+                    thread + " tries to release fork " + this + " which is already used by " + currentOwner);
         }
         owner = null;
         lock.unlock();

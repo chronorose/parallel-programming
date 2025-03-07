@@ -2,6 +2,7 @@ package org.nsu.syspro.parprog.interfaces;
 
 public interface Philosopher {
     long meals();
+
     void countMeal();
 
     default void eat(Fork f1, Fork f2) {

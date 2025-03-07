@@ -31,6 +31,53 @@ public class CustomSchedulingTest extends TestLevels {
         }
     }
 
+    static final class VeryCustomizedPhilosopher extends DefaultPhilosopher {
+        private boolean visited = false;
+
+        @Override
+        public void onHungry(Fork left, Fork right) {
+            if (id == 0 && !visited) {
+                left.acquire();
+                right.acquire();
+                sleepSeconds(1);
+                left.release();
+                right.release();
+                visited = true;
+            }
+            super.onHungry(left, right);
+        }
+    }
+
+    static final class WeakPhilosopher extends DefaultPhilosopher {
+
+        @Override
+        public void onHungry(Fork left, Fork right) {
+            if ((id & 1) == 0) {
+                sleepMillis(1);
+            } else {
+                sleepMillis(10);
+            }
+            super.onHungry(left, right);
+        }
+    }
+
+    static final class WeakTable extends DiningTable<WeakPhilosopher, DefaultFork> {
+        public WeakTable(int N) {
+            super(N);
+        }
+
+        @Override
+        public DefaultFork createFork() {
+            return new DefaultFork();
+        }
+
+        @Override
+        public WeakPhilosopher createPhilosopher() {
+            return new WeakPhilosopher();
+        }
+
+    }
+
     static final class CustomizedTable extends DiningTable<CustomizedPhilosopher, CustomizedFork> {
         public CustomizedTable(int N) {
             super(N);
@@ -47,11 +94,47 @@ public class CustomSchedulingTest extends TestLevels {
         }
     }
 
+    static final class VeryCustomizedTable extends DiningTable<VeryCustomizedPhilosopher, DefaultFork> {
+        public VeryCustomizedTable(int N) {
+            super(N);
+        }
+
+        @Override
+        public DefaultFork createFork() {
+            return new DefaultFork();
+        }
+
+        @Override
+        public VeryCustomizedPhilosopher createPhilosopher() {
+            return new VeryCustomizedPhilosopher();
+        }
+
+    }
+
     @EnabledIf("easyEnabled")
     @ParameterizedTest
-    @ValueSource(ints = {2, 3, 4, 5})
+    @ValueSource(ints = { 2, 3, 4, 5 })
     @Timeout(2)
     void testDeadlockFreedom(int N) {
         final CustomizedTable table = dine(new CustomizedTable(N), 1);
     }
+
+    @EnabledIf("easyEnabled")
+    @ParameterizedTest
+    @ValueSource(ints = { 2, 3, 4, 5 })
+    @Timeout(3)
+    void testSingleSlow(int N) {
+        final VeryCustomizedTable table = dine(new VeryCustomizedTable(N), 2);
+        assert (table.maxMeals() >= 1000);
+    }
+
+    @EnabledIf("mediumEnabled")
+    @ParameterizedTest
+    @ValueSource(ints = { 2, 3, 4, 5 })
+    @Timeout(2)
+    void testWeakFairness(int N) {
+        final WeakTable table = dine(new WeakTable(N), 1);
+        assert (table.minMeals() > 0); // every philosopher eat at least once
+    }
+
 }
